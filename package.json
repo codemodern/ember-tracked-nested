@@ -5,7 +5,7 @@
   "keywords": [
     "ember-addon"
   ],
-  "repository": "",
+  "repository": "https://github.com/kltan/ember-tracked-nested",
   "license": "MIT",
   "author": "Kean Loong Tan",
   "directories": {
