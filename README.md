@@ -1,4 +1,4 @@
-ember-tracked-nested
+ember-tracked-nested [![Build Status](https://travis-ci.com/kltan/ember-tracked-nested.svg?branch=main)](https://travis-ci.com/kltan/ember-tracked-nested)
 ==============================================================================
 
 `nested()` objects/arrays are proxied so that any updates to any nested members are notified at the root object which will trigger glimmer's `@tracked`. The `nested()` object are guaranteed to have the same JSON.stringify output as original object as long as it's just a mixture of POJO, array, and primitives, except for Symbol.
