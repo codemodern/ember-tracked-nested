@@ -45,6 +45,16 @@ import Component from '@glimmer/component';
 import { nested } from 'ember-tracked-nested';
 import { action } from '@ember/object';
 
+// works with POJO
+export default class Foo extends Component {
+  @tracked obj = nested({bar: 2 });
+  
+  @action
+  changeObj() {
+    this.obj.bar = 10;
+  }
+}
+
 // works when updating nested array
 export default class Foo extends Component {
   @tracked obj = nested([{ bar: 2 }, { bar: 4 }]);
@@ -65,7 +75,7 @@ export default class Foo extends Component {
   }
 }
 
-// works with array method
+// works with array
 export default class Foo extends Component {
   @tracked obj = nested({ bar: 2, get foo() { return this.bar } });
 
