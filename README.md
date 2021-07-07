@@ -19,9 +19,9 @@ Installation
 ------------------------------------------------------------------------------
 
 ```bash
-yarn add ember-deep-tracked
+yarn add ember-tracked-nested
 # or
-npm add ember-deep-tracked
+npm add ember-tracked-nested
 # or
 ember install ember-tracked-nested
 ```
