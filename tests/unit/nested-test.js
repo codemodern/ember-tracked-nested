@@ -1,5 +1,6 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
+import { get, set } from '@ember/object';
 import { module, test } from 'qunit';
 import { nested } from 'ember-tracked-nested';
 import { setupRenderingTest } from 'ember-qunit';
@@ -255,6 +256,25 @@ module('nested()', function () {
         update() {
           this.obj[0][1] = 'b';
           this.obj[0][2] = 'c';
+        }
+      }
+    );
+
+    reactivityTest(
+      'works with ember set and get',
+      class extends Component {
+        initialValue = 1;
+        finalValue = 3;
+        @tracked obj = nested([['a']]);
+
+        get value() {
+          // eslint-disable-next-line ember/no-get
+          return get(this, 'obj.0.length');
+        }
+
+        update() {
+          set(this, 'obj.0.1', 'b');
+          set(this, 'obj.0.2', 'c');
         }
       }
     );

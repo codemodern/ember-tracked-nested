@@ -1,9 +1,11 @@
 ember-tracked-nested [![Build Status](https://travis-ci.com/kltan/ember-tracked-nested.svg?branch=main)](https://travis-ci.com/kltan/ember-tracked-nested)
 ==============================================================================
 
-`nested()` objects/arrays are proxied so that any updates to any nested members are notified at the root object which will trigger glimmer's `@tracked`. The `nested()` object are guaranteed to have the same JSON.stringify output as original object as long as it's just a mixture of POJO, array, and primitives, except for Symbol.
+`nested()` objects/arrays are proxied so that any updates to any nested members are notified at the root object which 
+will trigger glimmer's `@tracked`. The `nested()` object are guaranteed to **have the same JSON.stringify output** as original object
+as long as it's just a mixture of POJO, array, and primitives, except for Symbol.
 
-To get a correct serialization of the `nested()` objects/arrays for sending a payload to server; JSON.strigify would suffice. `nested` objects/arrays are tested to return indentical JSON.stringify results as plain POJO and Array.
+`nested()` by itself is not reactive to the rendering, it only works when decorated with `@tracked`.
 
 Compatibility
 ------------------------------------------------------------------------------
@@ -74,7 +76,6 @@ export default class Foo extends Component {
   }
 }
 ```
-NOTE: nested by itself is not reactive to the rendering, it only works in conjunction with `@tracked`.
 
 Contributing
 ------------------------------------------------------------------------------
