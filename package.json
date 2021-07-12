@@ -1,6 +1,6 @@
 {
   "name": "ember-tracked-nested",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Tracked version of Javascript's built-in array and POJO.",
   "keywords": [
     "ember-addon"
