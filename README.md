@@ -5,7 +5,7 @@ ember-tracked-nested [![Build Status](https://travis-ci.com/kltan/ember-tracked-
 will trigger glimmer's `@tracked`. The `nested()` object are guaranteed to **have the same JSON.stringify output** as original object
 as long as it's just a mixture of POJO, array, and primitives, except for Symbol.
 
-`nested()` by itself is not reactive to the rendering, it only works when decorated with `@tracked`.
+`nested()` by itself is not reactive to the rendering, it only works when decorated with `@tracked` or through [autotracking](https://guides.emberjs.com/release/in-depth-topics/autotracking-in-depth/) of the root nested object.
 
 Compatibility
 ------------------------------------------------------------------------------
@@ -47,7 +47,7 @@ import { action } from '@ember/object';
 
 // works with POJO
 export default class Foo extends Component {
-  @tracked obj = nested({bar: 2 });
+  @tracked obj = nested({ bar: 2 });
   
   @action
   changeObj() {
@@ -75,16 +75,29 @@ export default class Foo extends Component {
   }
 }
 
-// works with array
+// works with POJO with getter
 export default class Foo extends Component {
   @tracked obj = nested({ bar: 2, get foo() { return this.bar } });
 
   @action
   changeObj() {
     this.obj.bar = 9;
-    // in the template {{this.obj.foo}} will display 9 reactively
   }
 }
+```
+
+or autotracked via args
+
+```js
+class SomeObj {
+  @tracked obj = nested({ a: 1, b: { c: 2 } });
+}
+
+// passing nested tracked the MyComponent
+<MyComponent @obj={{this.someObjInstance.obj}} />
+
+// sample my-component.hbs, printing out the nested value
+{{@obj.a}}
 ```
 
 Contributing

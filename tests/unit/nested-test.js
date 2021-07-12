@@ -5,6 +5,8 @@ import { module, test } from 'qunit';
 import { nested } from 'ember-tracked-nested';
 import { setupRenderingTest } from 'ember-qunit';
 import { reactivityTest } from '../helpers/reactivity';
+import { render, settled } from '@ember/test-helpers';
+import hbs from 'htmlbars-inline-precompile';
 
 module('nested()', function () {
   module('Object', () => {
@@ -278,5 +280,25 @@ module('nested()', function () {
         }
       }
     );
+
+    test('works with autotracked passed to template', async function (assert) {
+      class SomeObj {
+        @tracked obj = nested({ a: 1, b: { c: 2 } });
+      }
+      this.someObjInstance = new SomeObj();
+      this.owner.register('component:test-component', class extends Component {});
+      this.owner.register(
+        'template:components/test-component',
+        hbs`<div id="test">{{this.args.obj.a}}</div><div id="test2">{{this.args.obj.b.c}}</div>`
+      );
+      await render(hbs`<TestComponent @obj={{this.someObjInstance.obj}} />`);
+      assert.dom('#test').hasText('1', 'single nested before change');
+      assert.dom('#test2').hasText('2', 'multiple nested before change');
+      this.someObjInstance.obj.a = 2;
+      this.someObjInstance.obj.b.c = 9;
+      await settled();
+      assert.dom('#test').hasText('2', 'single nested after change');
+      assert.dom('#test2').hasText('9', 'multiple nested after change');
+    });
   });
 });
