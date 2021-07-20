@@ -1,6 +1,6 @@
 {
   "name": "ember-tracked-nested",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Tracked version of Javascript's built-in array and POJO.",
   "keywords": [
     "ember-addon"
@@ -32,7 +32,7 @@
   "dependencies": {
     "ember-cli-babel": "^7.26.6",
     "ember-cli-htmlbars": "^5.7.1",
-    "ember-cli-typescript": "4.2.1"
+    "ember-cli-typescript": "^4.2.1"
   },
   "devDependencies": {
     "@ember/optional-features": "^2.0.0",

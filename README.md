@@ -1,4 +1,4 @@
-ember-tracked-nested [![Build Status](https://travis-ci.com/kltan/ember-tracked-nested.svg?branch=main)](https://travis-ci.com/kltan/ember-tracked-nested)
+ember-tracked-nested [![Build Status](https://travis-ci.com/codemodern/ember-tracked-nested.svg?branch=main)](https://travis-ci.com/codemodern/ember-tracked-nested)
 ==============================================================================
 
 `nested()` objects/arrays are proxied so that any updates to any nested members are notified at the root object which 
@@ -92,7 +92,8 @@ or autotracked via args
 class SomeObj {
   @tracked obj = nested({ a: 1, b: { c: 2 } });
 }
-
+```
+```html
 // passing nested tracked the MyComponent
 <MyComponent @obj={{this.someObjInstance.obj}} />
 
