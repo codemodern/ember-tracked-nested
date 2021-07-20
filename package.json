@@ -1,11 +1,11 @@
 {
   "name": "ember-tracked-nested",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Tracked version of Javascript's built-in array and POJO.",
   "keywords": [
     "ember-addon"
   ],
-  "repository": "https://github.com/kltan/ember-tracked-nested",
+  "repository": "https://github.com/codemodern/ember-tracked-nested",
   "license": "MIT",
   "author": "Kean Loong Tan",
   "directories": {
