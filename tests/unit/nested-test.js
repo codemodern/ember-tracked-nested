@@ -1,8 +1,7 @@
 import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
 import { get, set } from '@ember/object';
 import { module, test } from 'qunit';
-import { nested } from 'ember-tracked-nested';
+import { nested, trackedNested } from 'ember-tracked-nested';
 import { setupRenderingTest } from 'ember-qunit';
 import { reactivityTest } from '../helpers/reactivity';
 import { render, settled } from '@ember/test-helpers';
@@ -12,21 +11,21 @@ module('nested()', function () {
   module('Object', () => {
     test('proxied properties can be accessed like an object', function (assert) {
       const originalObject = { a: 10 };
-      const nestedObject = nested(originalObject);
+      const nestedObject = nested(originalObject).data;
       assert.strictEqual(nestedObject.a, originalObject.a, 'Same property name will have the same value');
       assert.deepEqual(Object.keys(nestedObject), ['a'], `nested will behave like it's wrapped object native methods`);
     });
 
     test('original data is cloned inside nested', function (assert) {
       const originalData = { a: 1, b: { c: 1 } };
-      const nestedData = nested(originalData);
-      nestedData.b.d = 1;
-      assert.strictEqual(originalData.b.d, undefined, 'Original data is not changed');
-      assert.strictEqual(nestedData.b.d, 1, 'Proxied data is added');
+      const nestedData = nested(originalData).data;
+      originalData.b.d = 1;
+      assert.strictEqual(originalData.b.d, 1, 'Original data is changed');
+      assert.strictEqual(nestedData.b.d, undefined, 'Proxied data is not changed');
     });
 
     test('preserves getters even nested ones', function (assert) {
-      let obj = nested({
+      let instance = nested({
         foo: 123,
         get bar() {
           return this.foo;
@@ -38,17 +37,18 @@ module('nested()', function () {
           },
         },
       });
+      let obj = instance.data;
       assert.strictEqual(obj.foo, 123, 'initial value correct');
       assert.strictEqual(obj.bar, 123, 'intital getter correct');
       obj.foo = 456;
-      assert.strictEqual(obj.foo, 456, 'value updated correctly');
-      assert.strictEqual(obj.bar, 456, 'getter updated correctly');
+      assert.strictEqual(instance.data.foo, 456, 'value updated correctly');
+      assert.strictEqual(instance.data.bar, 456, 'getter updated correctly');
 
       assert.strictEqual(obj.foobar.foo, 789, 'initial nested value correct');
       assert.strictEqual(obj.foobar.bar, 789, 'initial nested getter correct');
       obj.foobar.foo = 101112;
-      assert.strictEqual(obj.foobar.foo, 101112, 'nested value updated correctly');
-      assert.strictEqual(obj.foobar.bar, 101112, 'nested getter updated correctly');
+      assert.strictEqual(instance.data.foobar.foo, 101112, 'nested value updated correctly');
+      assert.strictEqual(instance.data.foobar.bar, 101112, 'nested getter updated correctly');
     });
 
     test('JSON.stringify indentically as pure objects', function (assert) {
@@ -64,7 +64,7 @@ module('nested()', function () {
           },
         },
       };
-      const nestedObj = nested(obj);
+      const nestedObj = nested(obj).data;
 
       assert.strictEqual(JSON.stringify(obj), JSON.stringify(nestedObj));
     });
@@ -73,7 +73,7 @@ module('nested()', function () {
   module('Array', () => {
     test('proxied array can still use array methods', function (assert) {
       const originalArray = ['a'];
-      const nestedArray = nested(originalArray);
+      const nestedArray = nested(originalArray).data;
       assert.strictEqual(nestedArray[0], originalArray[0], 'Array in same index looks identical');
       assert.strictEqual(
         nestedArray.slice(0, 1).length,
@@ -98,7 +98,7 @@ module('nested()', function () {
           },
         },
       ];
-      const nestedArr = nested(arr);
+      const nestedArr = nested(arr).data;
 
       assert.strictEqual(JSON.stringify(arr), JSON.stringify(nestedArr));
     });
@@ -113,7 +113,7 @@ module('nested()', function () {
         initialValue = 1;
         finalValue = 3;
 
-        @tracked obj = nested({ foo: { bar: 1 } });
+        @trackedNested obj = { foo: { bar: 1 } };
 
         get value() {
           return this.obj.foo.bar;
@@ -130,14 +130,14 @@ module('nested()', function () {
       class extends Component {
         initialValue = 1;
         finalValue = 3;
-        @tracked obj = nested({
+        @trackedNested obj = {
           foo: {
             bar: 1,
             get baz() {
               return this.bar;
             },
           },
-        });
+        };
 
         get value() {
           return this.obj.foo.baz;
@@ -154,15 +154,16 @@ module('nested()', function () {
       class extends Component {
         initialValue = 1;
         finalValue = 3;
-        @tracked obj = nested([
+        @trackedNested obj = [
           {
             foo: {
               bar: 1,
             },
           },
-        ]);
+        ];
 
         get value() {
+          debugger;
           return this.obj[0].foo.bar;
         }
 
@@ -177,13 +178,13 @@ module('nested()', function () {
       class extends Component {
         initialValue = 1;
         finalValue = 2;
-        @tracked obj = nested([
+        @trackedNested obj = [
           {
             foo: {
               bar: 1,
             },
           },
-        ]);
+        ];
 
         get value() {
           return this.obj.length;
@@ -204,13 +205,13 @@ module('nested()', function () {
       class extends Component {
         initialValue = 1;
         finalValue = 2;
-        @tracked obj = nested([
+        @trackedNested obj = [
           {
             foo: {
               bar: 1,
             },
           },
-        ]);
+        ];
 
         get value() {
           return this.obj.length;
@@ -231,7 +232,7 @@ module('nested()', function () {
       class extends Component {
         initialValue = 1;
         finalValue = 3;
-        @tracked obj = nested([['a']]);
+        @trackedNested obj = [['a']];
 
         get value() {
           return this.obj[0].length;
@@ -249,7 +250,7 @@ module('nested()', function () {
       class extends Component {
         initialValue = 1;
         finalValue = 3;
-        @tracked obj = nested([['a']]);
+        @trackedNested obj = [['a']];
 
         get value() {
           return this.obj[0].length;
@@ -267,7 +268,7 @@ module('nested()', function () {
       class extends Component {
         initialValue = 1;
         finalValue = 3;
-        @tracked obj = nested([['a']]);
+        @trackedNested obj = [['a']];
 
         get value() {
           // eslint-disable-next-line ember/no-get
@@ -280,25 +281,5 @@ module('nested()', function () {
         }
       }
     );
-
-    test('works with autotracked passed to template', async function (assert) {
-      class SomeObj {
-        @tracked obj = nested({ a: 1, b: { c: 2 } });
-      }
-      this.someObjInstance = new SomeObj();
-      this.owner.register('component:test-component', class extends Component {});
-      this.owner.register(
-        'template:components/test-component',
-        hbs`<div id="test">{{this.args.obj.a}}</div><div id="test2">{{this.args.obj.b.c}}</div>`
-      );
-      await render(hbs`<TestComponent @obj={{this.someObjInstance.obj}} />`);
-      assert.dom('#test').hasText('1', 'single nested before change');
-      assert.dom('#test2').hasText('2', 'multiple nested before change');
-      this.someObjInstance.obj.a = 2;
-      this.someObjInstance.obj.b.c = 9;
-      await settled();
-      assert.dom('#test').hasText('2', 'single nested after change');
-      assert.dom('#test2').hasText('9', 'multiple nested after change');
-    });
   });
 });

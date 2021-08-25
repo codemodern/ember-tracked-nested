@@ -1,4 +1,4 @@
 // Public API
-export { default as nested } from './-private/nested';
+export { nested, trackedNested } from './-private/nested';
 
 // Public Types
