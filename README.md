@@ -28,10 +28,10 @@ Usage
 ------------------------------------------------------------------------------
 
 ```js
-import { tracked } from '@glimmer/tracking';
-import { nested } from 'ember-tracked-nested';
+import { trackedNested } from '@glimmer/tracking';
+
 class Foo {
-    @trackedNested obj = nested({ bar: 2 });
+    @trackedNested obj = { bar: 2 };
 }
 ```
 
