@@ -115,7 +115,7 @@ function descriptorForField<T extends object, K extends keyof T>(
   desc?: DecoratorPropertyDescriptor
 ): PropertyDescriptor {
   if (desc) {
-    const value = desc.initializer();
+    const value = desc.initializer;
     desc.initializer = function () {
       // @ts-ignore
       return nested(value.call(this), this, key).data;
