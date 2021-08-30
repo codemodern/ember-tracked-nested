@@ -101,21 +101,26 @@ export function nested(data: any = {}, context: any, member: string) {
   return new Nested(data, context, member);
 }
 
+// @ts-ignore
+export const trackedNested: PropertyDecorator = (...args: any[]) => {
+  const [target, key, descriptor] = args;
+  return descriptorForField(target, key, descriptor);
+};
+
 type DecoratorPropertyDescriptor = PropertyDescriptor & { initializer: any };
 
-// @ts-ignore
-export function trackedNested<T extends object, K extends keyof T>(
-  target: T,
-  name: K,
-  descriptor?: DecoratorPropertyDescriptor
-): PropertyDecorator {
-  if (descriptor) {
-    const value = descriptor.initializer();
-    descriptor.initializer = function () {
+function descriptorForField<T extends object, K extends keyof T>(
+  _target: T,
+  key: K,
+  desc?: DecoratorPropertyDescriptor
+): PropertyDescriptor {
+  if (desc) {
+    const value = desc.initializer();
+    desc.initializer = function () {
       // @ts-ignore
-      return nested(value, this, name).data;
+      return nested(value.call(this), this, key).data;
     };
   }
   // @ts-ignore
-  return tracked(target, name, descriptor);
+  return tracked(_target, key, desc);
 }
