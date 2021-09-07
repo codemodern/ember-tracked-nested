@@ -64,10 +64,10 @@ const handler = function (root: Nested, paths: any[]): ProxyHandler<any> {
 class Nested {
   private raw: object;
   private context: any;
-  private member: string;
+  private member: string | number | symbol;
   public data: any;
 
-  constructor(obj: any, context: any, member: string) {
+  constructor(obj: any, context: any, member: string | number | symbol) {
     this.raw = deepClone(obj ?? {});
     // @ts-ignore
     this.data = new Proxy(deepClone(this.raw), handler(this, []));
@@ -97,7 +97,7 @@ class Nested {
   }
 }
 
-export function nested(data: any = {}, context: any, member: string) {
+export function nested(data: any = {}, context: any, member: string | number | symbol) {
   // clone object
   return new Nested(data, context, member);
 }
