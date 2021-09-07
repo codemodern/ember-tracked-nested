@@ -4,13 +4,18 @@ import { module, test } from 'qunit';
 import { nested, trackedNested } from 'ember-tracked-nested';
 import { setupRenderingTest } from 'ember-qunit';
 import { reactivityTest } from '../helpers/reactivity';
-import { render, settled } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
 
 module('nested()', function () {
   module('Object', () => {
     test('proxied properties can be accessed like an object', function (assert) {
       const originalObject = { a: 10 };
+      const nestedObject = nested(originalObject).data;
+      assert.strictEqual(nestedObject.a, originalObject.a, 'Same property name will have the same value');
+      assert.deepEqual(Object.keys(nestedObject), ['a'], `nested will behave like it's wrapped object native methods`);
+    });
+
+    test('null value', function (assert) {
+      const originalObject = { a: null };
       const nestedObject = nested(originalObject).data;
       assert.strictEqual(nestedObject.a, originalObject.a, 'Same property name will have the same value');
       assert.deepEqual(Object.keys(nestedObject), ['a'], `nested will behave like it's wrapped object native methods`);
@@ -108,6 +113,24 @@ module('nested()', function () {
     setupRenderingTest(hooks);
 
     reactivityTest(
+      'works with nested optional object property',
+      class extends Component {
+        initialValue = '';
+        finalValue = 3;
+
+        @trackedNested obj;
+
+        get value() {
+          return this.obj?.foo?.bar;
+        }
+
+        update() {
+          this.obj = { foo: { bar: this.finalValue } };
+        }
+      }
+    );
+
+    reactivityTest(
       'works with nested object property',
       class extends Component {
         initialValue = 1;
@@ -163,7 +186,6 @@ module('nested()', function () {
         ];
 
         get value() {
-          debugger;
           return this.obj[0].foo.bar;
         }
 

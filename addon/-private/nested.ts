@@ -2,6 +2,7 @@ import deepEqual from 'ember-tracked-nested/-private/deep-equal';
 import deepClone from 'ember-tracked-nested/-private/deep-clone';
 import { get, set } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import { typeOf } from '@ember/utils';
 
 // these methods modifies array in-place
 const ARRAY_MODIFIER_GETTER_METHODS = new Set<string | PropertyKey>([
@@ -39,7 +40,7 @@ const handler = function (root: Nested, paths: any[]): ProxyHandler<any> {
       }
 
       // do not recreate a new proxy is already proxy
-      if (!value.__isObservedProxy && typeof value === 'object') {
+      if (['array', 'object', 'instance'].includes(typeOf(value)) && !value.__isObservedProxy) {
         target[key] = new Proxy(value, handler(root, [...paths, key]));
       }
       return target[key];
@@ -67,7 +68,7 @@ class Nested {
   public data: any;
 
   constructor(obj: any, context: any, member: string) {
-    this.raw = deepClone(obj);
+    this.raw = deepClone(obj ?? {});
     // @ts-ignore
     this.data = new Proxy(deepClone(this.raw), handler(this, []));
     this.context = context;
@@ -118,7 +119,7 @@ function descriptorForField<T extends object, K extends keyof T>(
     const value = desc.initializer;
     desc.initializer = function () {
       // @ts-ignore
-      return nested(value.call(this), this, key).data;
+      return nested(value?.call(this), this, key).data;
     };
   }
   // @ts-ignore
