@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2017",
+    "target": "es2019",
     "allowJs": true,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
@@ -18,23 +18,14 @@
     "inlineSourceMap": true,
     "inlineSources": true,
     "baseUrl": ".",
+    "module": "ES6",
     "experimentalDecorators": true,
     "paths": {
-      "dummy/tests/*": [
-        "tests/*"
-      ],
-      "dummy/*": [
-        "tests/dummy/app/*",
-        "app/*"
-      ],
       "ember-tracked-nested": [
         "addon"
       ],
       "ember-tracked-nested/*": [
         "addon/*"
-      ],
-      "*": [
-        "types/*"
       ]
     }
   },
