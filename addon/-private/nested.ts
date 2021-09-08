@@ -1,7 +1,6 @@
 import deepEqual from 'ember-tracked-nested/-private/deep-equal';
 import deepClone from 'ember-tracked-nested/-private/deep-clone';
 import { get, set } from '@ember/object';
-import { tracked } from '@glimmer/tracking';
 import { typeOf } from '@ember/utils';
 
 // these methods modifies array in-place
