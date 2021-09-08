@@ -97,6 +97,9 @@
     "qunit-dom": "^1.6.0",
     "typescript": "^4.3.5"
   },
+  "engines": {
+    "node": "10.* || >= 12"
+  },
   "ember": {
     "edition": "octane"
   },
