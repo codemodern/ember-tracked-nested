@@ -101,27 +101,3 @@ export function nested(data: any = {}, context: any, member: string | number | s
   // clone object
   return new Nested(data, context, member);
 }
-
-// @ts-ignore
-export const trackedNested: PropertyDecorator = (...args: any[]) => {
-  const [target, key, descriptor] = args;
-  return descriptorForField(target, key, descriptor);
-};
-
-type DecoratorPropertyDescriptor = PropertyDescriptor & { initializer: any };
-
-function descriptorForField<T extends object, K extends keyof T>(
-  _target: T,
-  key: K,
-  desc?: DecoratorPropertyDescriptor
-): PropertyDescriptor {
-  if (desc) {
-    const value = desc.initializer;
-    desc.initializer = function () {
-      // @ts-ignore
-      return nested(value?.call(this), this, key).data;
-    };
-  }
-  // @ts-ignore
-  return tracked(_target, key, desc);
-}
