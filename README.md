@@ -28,7 +28,7 @@ Usage
 ------------------------------------------------------------------------------
 
 ```js
-import { trackedNested } from '@glimmer/tracking';
+import { trackedNested } from 'ember-tracked-nested'
 
 class Foo {
     @trackedNested obj = { bar: 2 };
